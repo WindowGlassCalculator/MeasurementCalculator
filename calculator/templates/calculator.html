@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+
+{% load static %}
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Window Glass Calculator</title>
+
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #eef5f9;
+            color: #1f2937;
+        }
+
+
+        .app {
+            max-width: 1000px;
+            margin: auto;
+            padding: 20px;
+        }
+
+
+        /* ================= HEADER ================= */
+
+        .header {
+            background: linear-gradient(135deg, #0f3d5e, #1976a8);
+            color: white;
+            padding: 28px;
+            border-radius: 20px;
+            text-align: center;
+            margin-bottom: 20px;
+            box-shadow: 0 6px 18px rgba(15, 61, 94, 0.20);
+        }
+
+
+        .header h1 {
+            margin: 0;
+            font-size: 30px;
+        }
+
+
+        .header p {
+            margin: 8px 0 0;
+            font-size: 15px;
+        }
+
+
+        /* ================= MEASUREMENT ================= */
+
+        .measurement-card {
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 25px;
+            border: 1px solid #d7e7ef;
+            box-shadow: 0 5px 18px rgba(15, 61, 94, 0.10);
+        }
+
+
+        .measurement-card h2 {
+            margin-top: 0;
+            margin-bottom: 22px;
+            text-align: center;
+            color: #0f3d5e;
+        }
+
+
+        .inputs {
+            display: flex;
+            gap: 18px;
+        }
+
+
+        .input-box {
+            flex: 1;
+        }
+
+
+        .input-box label {
+            display: block;
+            font-weight: bold;
+            color: #31566b;
+            margin-bottom: 8px;
+        }
+
+
+        .input-box input {
+            width: 100%;
+            padding: 15px;
+            border: 1px solid #b9d3df;
+            border-radius: 10px;
+            font-size: 19px;
+            outline: none;
+            background: #f8fcfe;
+        }
+
+
+        .input-box input:focus {
+            border-color: #1976a8;
+        }
+
+
+        /* ================= CALCULATE ================= */
+
+        .calculate-btn {
+            width: 100%;
+            margin-top: 20px;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            background: #1976a8;
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+
+        .calculate-btn:hover {
+            background: #0f5f8f;
+        }
+
+
+        /* ================= RESULT TITLE ================= */
+
+        .results-title {
+            text-align: center;
+            color: #0f3d5e;
+            margin: 25px 0 15px;
+        }
+
+
+        /* ================= RESULT ROW ================= */
+
+        .results {
+            display: flex;
+            gap: 18px;
+        }
+
+
+        .result-card {
+            flex: 1;
+            background: white;
+            border-radius: 18px;
+            padding: 22px;
+            text-align: center;
+            border: 1px solid #d7e7ef;
+            box-shadow: 0 5px 18px rgba(15, 61, 94, 0.10);
+        }
+
+
+        .result-card h3 {
+            margin-top: 0;
+            font-size: 19px;
+            color: #31566b;
+        }
+
+
+        .result-value {
+            font-size: 30px;
+            font-weight: bold;
+            color: #0f5f8f;
+            margin-top: 20px;
+        }
+
+
+        /* ================= GLASS ================= */
+
+        .glass-result {
+            margin-top: 15px;
+            text-align: left;
+            line-height: 2;
+            font-size: 17px;
+            background: #f1f9fd;
+            padding: 12px;
+            border-radius: 10px;
+        }
+
+
+        .glass-result span {
+            font-weight: bold;
+            color: #0f5f8f;
+        }
+
+
+        /* ================= NEW CALCULATION ================= */
+
+        .new-btn {
+            display: block;
+            width: 100%;
+            margin-top: 20px;
+            padding: 14px;
+            border: 2px solid #1976a8;
+            background: white;
+            color: #1976a8;
+            border-radius: 10px;
+            font-size: 17px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+
+        .new-btn:hover {
+            background: #eef8fc;
+        }
+
+
+        /* ================= MOBILE ================= */
+
+        @media (max-width: 700px) {
+
+            .app {
+                padding: 12px;
+            }
+
+
+            .header {
+                padding: 22px 15px;
+            }
+
+
+            .header h1 {
+                font-size: 25px;
+            }
+
+
+            .inputs {
+                flex-direction: column;
+                gap: 12px;
+            }
+
+
+            .results {
+                flex-direction: column;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="app">
+
+
+    <!-- ================= HEADER ================= -->
+
+    <div class="header">
+
+        <h1>🪟 Window Glass Calculator</h1>
+
+        <p>Window Measurement Calculator</p>
+
+    </div>
+
+
+
+    <!-- ================= WINDOW MEASUREMENT ================= -->
+
+    <div class="measurement-card">
+
+        <h2>Window Measurement</h2>
+
+
+        <form method="POST">
+
+            {% csrf_token %}
+
+
+            <div class="inputs">
+
+
+                <div class="input-box">
+
+                    <label>
+                        Width
+                    </label>
+
+
+                    <input
+                        type="text"
+                        name="width"
+                        value="{{ width }}"
+                        placeholder="Enter Width"
+                        required
+                    >
+
+                </div>
+
+
+
+                <div class="input-box">
+
+                    <label>
+                        Height
+                    </label>
+
+
+                    <input
+                        type="text"
+                        name="height"
+                        value="{{ height }}"
+                        placeholder="Enter Height"
+                        required
+                    >
+
+                </div>
+
+
+            </div>
+
+
+            <button
+                class="calculate-btn"
+                type="submit">
+
+                Calculate
+
+            </button>
+
+
+        </form>
+
+    </div>
+
+
+
+    <!-- ================= RESULTS ================= -->
+
+    {% if bearing_result %}
+
+
+    <h2 class="results-title">
+        Calculation Result
+    </h2>
+
+
+
+    <div class="results">
+
+
+        <!-- BEARING PATTI -->
+
+        <div class="result-card">
+
+            <h3>
+                📏 Bearing Patti
+            </h3>
+
+
+            <div class="result-value">
+
+                {{ bearing_result }}
+
+            </div>
+
+        </div>
+
+
+
+        <!-- HANDLE INTERLOCK -->
+
+        <div class="result-card">
+
+            <h3>
+                🔧 Handle Interlock
+            </h3>
+
+
+            <div class="result-value">
+
+                {{ handle_result }}
+
+            </div>
+
+        </div>
+
+
+
+        <!-- GLASS -->
+
+        <div class="result-card">
+
+            <h3>
+                🪟 Glass
+            </h3>
+
+
+            <div class="glass-result">
+
+
+                <div>
+
+                    Bearing Patti:
+
+                    <span>
+                        {{ glass_bearing_result }}
+                    </span>
+
+                </div>
+
+
+                <div>
+
+                    Handle Interlock:
+
+                    <span>
+                        {{ glass_handle_result }}
+                    </span>
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+
+
+    <!-- ================= NEW CALCULATION ================= -->
+
+    <button
+        class="new-btn"
+        onclick="window.location.href=window.location.pathname">
+
+        + New Calculation
+
+    </button>
+
+
+    {% endif %}
+
+
+</div>
+
+
+</body>
+
+</html>
