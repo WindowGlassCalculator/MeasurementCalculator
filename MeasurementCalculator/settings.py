@@ -28,7 +28,17 @@ DEBUG = False
 # Allowed hosts
 # Render + local testing
 ALLOWED_HOSTS = [
-    "*",
+    "measurement-calculator.onrender.com",
+    "localhost",
+    "127.0.0.1",
+    "10.0.2.2",
+    "10.203.207.138",
+]
+
+CSRF_TRUSTED_ORIGINS = [
+    "https://measurement-calculator.onrender.com",
+    "http://10.0.2.2:8000",
+    "http://10.203.207.138:8000",
 ]
 
 
