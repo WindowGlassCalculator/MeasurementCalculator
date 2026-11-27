@@ -1,7 +1,9 @@
+
 from django.shortcuts import render, redirect
 from .models import CalculationHistory
 from django.db.models import Q
 from datetime import datetime
+
 
 # =====================================================
 # DORI CALCULATION
@@ -206,6 +208,8 @@ def get_ui(request):
             "date": "दिनांक",
             "time": "वेळ",
             "no_history": "अजून कोणताही इतिहास उपलब्ध नाही.",
+            "search_placeholder": "रुंदी, उंची किंवा तारीख शोधा...",
+            "search_button": "शोधा",
             "back": "कॅल्क्युलेटरवर परत जा",
             "error": "कृपया योग्य मोजमाप टाका.",
         }
@@ -233,6 +237,8 @@ def get_ui(request):
         "date": "Date",
         "time": "Time",
         "no_history": "No calculation history available.",
+        "search_placeholder": "Search width, height or date...",
+        "search_button": "Search",
         "back": "Back to Calculator",
         "error": "Please enter valid measurement.",
     }
@@ -324,8 +330,8 @@ def calculator(request):
 # CALCULATION HISTORY
 # =====================================================
 
-
 def calculation_history(request):
+
     if not request.session.get("language"):
         return redirect("language_selection")
 
@@ -333,8 +339,6 @@ def calculation_history(request):
     search_query = request.GET.get("q", "").strip()
 
     if search_query:
-        from django.db.models import Q
-        from datetime import datetime
 
         history = history.filter(
             Q(width__icontains=search_query) |
@@ -347,11 +351,15 @@ def calculation_history(request):
 
         try:
             search_date = datetime.strptime(search_query, "%d-%m-%Y").date()
-            history = CalculationHistory.objects.filter(created_at__date=search_date)
+            history = CalculationHistory.objects.filter(
+                created_at__date=search_date
+            )
         except ValueError:
             try:
                 search_date = datetime.strptime(search_query, "%Y-%m-%d").date()
-                history = CalculationHistory.objects.filter(created_at__date=search_date)
+                history = CalculationHistory.objects.filter(
+                    created_at__date=search_date
+                )
             except ValueError:
                 pass
 

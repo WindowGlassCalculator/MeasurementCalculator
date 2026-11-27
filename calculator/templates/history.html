@@ -40,24 +40,6 @@
             font-size: 27px;
         }
 
-        .back-btn {
-            display: block;
-            text-decoration: none;
-            text-align: center;
-            background: #1976a8;
-            color: white;
-            padding: 14px;
-            border-radius: 10px;
-            font-weight: bold;
-            margin-bottom: 22px;
-        }
-
-        .back-btn:hover {
-            background: #0f5f8f;
-        }
-
-        /* Search Section */
-
         .search-box {
             background: white;
             border: 1px solid #d7e7ef;
@@ -67,34 +49,11 @@
             box-shadow: 0 5px 18px rgba(15, 61, 94, 0.10);
         }
 
-        .search-box h3 {
-            margin-top: 0;
-            color: #0f3d5e;
-        }
-
-        .search-fields {
-            display: flex;
-            gap: 12px;
-            flex-wrap: wrap;
-        }
-
-        .search-field {
-            flex: 1;
-            min-width: 180px;
-        }
-
-        .search-field label {
-            display: block;
-            font-weight: bold;
-            color: #31566b;
-            margin-bottom: 8px;
-        }
-
         .search-field input {
             width: 100%;
-            padding: 13px;
+            padding: 15px;
             border: 1px solid #b9d3df;
-            border-radius: 9px;
+            border-radius: 10px;
             font-size: 16px;
             outline: none;
         }
@@ -249,44 +208,39 @@
         <h1>📋 {{ ui.history }}</h1>
     </div>
 
-    <a href="{% url 'calculator' %}" class="back-btn">
-        ← {{ ui.back }}
-    </a>
+    <!-- Search Section -->
 
+    <div class="search-box">
 
-<div class="search-box">
+        <form method="GET">
 
-    <form method="GET">
+            <div class="search-field">
 
-        <div class="search-field">
+                <input type="text"
+                       name="q"
+                       value="{{ search_query }}"
+                       placeholder="🔍 {{ ui.search_placeholder }}">
 
-            <input type="text"
-                   name="q"
-                   value="{{ search_query }}"
-                   placeholder="🔍 Search Date, Bearing Patti, Handle Interlock..."
-                   style="width:100%; padding:15px; border:1px solid #b9d3df; border-radius:10px; font-size:16px;">
+            </div>
 
-        </div>
+            <div class="search-actions">
 
-        <div class="search-actions">
+                <button type="submit" class="search-btn">
+                    🔍 {{ ui.search_button }}
+                </button>
 
-            <button type="submit" class="search-btn">
-                🔍 Search
-            </button>
+                {% if search_query %}
+                    <a href="{% url 'calculation_history' %}"
+                       class="clear-btn">
+                        ✖ {% if ui.language == 'mr' %}पुसून टाका{% else %}Clear{% endif %}
+                    </a>
+                {% endif %}
 
-            {% if search_query %}
-                <a href="{% url 'calculation_history' %}"
-                   class="clear-btn">
-                    ✖ Clear
-                </a>
-            {% endif %}
+            </div>
 
-        </div>
+        </form>
 
-    </form>
-
-</div>
-
+    </div>
 
     <!-- History Cards -->
 
@@ -360,7 +314,7 @@
             <p>
                 {% if search_query %}
                     {% if ui.language == 'mr' %}
-                        शोधलेला Record सापडला नाही.
+                        शोधलेला रेकॉर्ड सापडला नाही.
                     {% else %}
                         No matching records found.
                     {% endif %}
