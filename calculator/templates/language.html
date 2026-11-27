@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -13,6 +14,7 @@
         body {
             margin: 0;
             min-height: 100vh;
+            min-height: 100dvh;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -24,6 +26,7 @@
         .language-box {
             width: 100%;
             max-width: 430px;
+            margin: auto;
             background: white;
             padding: 35px 25px;
             border-radius: 22px;
@@ -77,34 +80,34 @@
 
 <body>
 
-<div class="language-box">
+    <div class="language-box">
 
-    <div class="logo">🪟</div>
+        <div class="logo">🪟</div>
 
-    <h1>Window Glass Calculator</h1>
+        <h1>Window Glass Calculator</h1>
 
-    <p>Select Your Language / आपली भाषा निवडा</p>
+        <p>Select Your Language / आपली भाषा निवडा</p>
 
-    <form method="POST" action="{% url 'set_language' %}">
-        {% csrf_token %}
+        <form method="POST" action="{% url 'set_language' %}">
+            {% csrf_token %}
 
-        <button class="language-btn marathi"
-                type="submit"
-                name="language"
-                value="mr">
-            मराठी
-        </button>
+            <button class="language-btn marathi"
+                    type="submit"
+                    name="language"
+                    value="mr">
+                मराठी
+            </button>
 
-        <button class="language-btn"
-                type="submit"
-                name="language"
-                value="en">
-            English
-        </button>
+            <button class="language-btn"
+                    type="submit"
+                    name="language"
+                    value="en">
+                English
+            </button>
 
-    </form>
+        </form>
 
-</div>
+    </div>
 
 </body>
 </html>
