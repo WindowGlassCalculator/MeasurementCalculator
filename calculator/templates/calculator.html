@@ -1,23 +1,14 @@
 <!DOCTYPE html>
-<html lang="en">
-
-{% load static %}
-
+<html lang="{{ ui.language }}">
 <head>
-
     <meta charset="UTF-8">
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Window Glass Calculator</title>
-
+    <title>{{ ui.app_name }}</title>
 
     <style>
-
         * {
             box-sizing: border-box;
         }
-
 
         body {
             margin: 0;
@@ -26,40 +17,77 @@
             color: #1f2937;
         }
 
-
         .app {
             max-width: 1000px;
             margin: auto;
             padding: 20px;
         }
 
-
-        /* ================= HEADER ================= */
-
         .header {
+            position: relative;
             background: linear-gradient(135deg, #0f3d5e, #1976a8);
             color: white;
-            padding: 28px;
+            padding: 28px 60px;
             border-radius: 20px;
             text-align: center;
             margin-bottom: 20px;
             box-shadow: 0 6px 18px rgba(15, 61, 94, 0.20);
         }
 
-
         .header h1 {
             margin: 0;
             font-size: 30px;
         }
-
 
         .header p {
             margin: 8px 0 0;
             font-size: 15px;
         }
 
+        .menu-button {
+            position: absolute;
+            right: 16px;
+            top: 16px;
+            border: none;
+            background: rgba(255,255,255,0.17);
+            color: white;
+            font-size: 27px;
+            width: 45px;
+            height: 45px;
+            border-radius: 10px;
+            cursor: pointer;
+        }
 
-        /* ================= MEASUREMENT ================= */
+        .menu-dropdown {
+            display: none;
+            position: absolute;
+            right: 16px;
+            top: 68px;
+            width: 220px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+            overflow: hidden;
+            z-index: 10;
+            text-align: left;
+        }
+
+        .menu-dropdown.show {
+            display: block;
+        }
+
+        .menu-dropdown a {
+            display: block;
+            padding: 15px;
+            color: #0f3d5e;
+            text-decoration: none;
+            font-weight: bold;
+            border-bottom: 1px solid #e5edf2;
+        }
+
+        .menu-dropdown a:hover {
+            background: #eef5f9;
+        }
 
         .measurement-card {
             background: white;
@@ -70,7 +98,6 @@
             box-shadow: 0 5px 18px rgba(15, 61, 94, 0.10);
         }
 
-
         .measurement-card h2 {
             margin-top: 0;
             margin-bottom: 22px;
@@ -78,17 +105,14 @@
             color: #0f3d5e;
         }
 
-
         .inputs {
             display: flex;
             gap: 18px;
         }
 
-
         .input-box {
             flex: 1;
         }
-
 
         .input-box label {
             display: block;
@@ -96,7 +120,6 @@
             color: #31566b;
             margin-bottom: 8px;
         }
-
 
         .input-box input {
             width: 100%;
@@ -108,34 +131,33 @@
             background: #f8fcfe;
         }
 
-
         .input-box input:focus {
             border-color: #1976a8;
         }
 
-
-        /* ================= CALCULATE ================= */
-
-        .calculate-btn {
+        .calculate-btn,
+        .new-btn {
             width: 100%;
             margin-top: 20px;
             padding: 15px;
-            border: none;
             border-radius: 10px;
-            background: #1976a8;
-            color: white;
             font-size: 18px;
             font-weight: bold;
             cursor: pointer;
+            display: block;
+            text-align: center;
+            text-decoration: none;
         }
 
+        .calculate-btn {
+            border: none;
+            background: #1976a8;
+            color: white;
+        }
 
         .calculate-btn:hover {
             background: #0f5f8f;
         }
-
-
-        /* ================= RESULT TITLE ================= */
 
         .results-title {
             text-align: center;
@@ -143,14 +165,10 @@
             margin: 25px 0 15px;
         }
 
-
-        /* ================= RESULT ROW ================= */
-
         .results {
             display: flex;
             gap: 18px;
         }
-
 
         .result-card {
             flex: 1;
@@ -162,13 +180,11 @@
             box-shadow: 0 5px 18px rgba(15, 61, 94, 0.10);
         }
 
-
         .result-card h3 {
             margin-top: 0;
             font-size: 19px;
             color: #31566b;
         }
-
 
         .result-value {
             font-size: 30px;
@@ -176,9 +192,6 @@
             color: #0f5f8f;
             margin-top: 20px;
         }
-
-
-        /* ================= GLASS ================= */
 
         .glass-result {
             margin-top: 15px;
@@ -190,271 +203,185 @@
             border-radius: 10px;
         }
 
-
         .glass-result span {
             font-weight: bold;
             color: #0f5f8f;
         }
 
-
-        /* ================= NEW CALCULATION ================= */
-
         .new-btn {
-            display: block;
-            width: 100%;
-            margin-top: 20px;
-            padding: 14px;
             border: 2px solid #1976a8;
             background: white;
             color: #1976a8;
-            border-radius: 10px;
-            font-size: 17px;
-            font-weight: bold;
-            cursor: pointer;
         }
-
 
         .new-btn:hover {
             background: #eef8fc;
         }
 
-
-        /* ================= MOBILE ================= */
+        .error {
+            color: #dc2626;
+            background: #fef2f2;
+            padding: 12px;
+            border-radius: 10px;
+            margin-top: 15px;
+            text-align: center;
+        }
 
         @media (max-width: 700px) {
-
             .app {
                 padding: 12px;
             }
 
-
             .header {
-                padding: 22px 15px;
+                padding: 25px 50px;
             }
-
 
             .header h1 {
-                font-size: 25px;
+                font-size: 24px;
             }
 
-
-            .inputs {
+            .inputs,
+            .results {
                 flex-direction: column;
                 gap: 12px;
             }
 
-
-            .results {
-                flex-direction: column;
+            .result-value {
+                font-size: 27px;
             }
-
         }
-
     </style>
-
 </head>
-
 
 <body>
 
-
 <div class="app">
-
-
-    <!-- ================= HEADER ================= -->
 
     <div class="header">
 
-        <h1>🪟 Window Glass Calculator</h1>
+        <button class="menu-button"
+                type="button"
+                onclick="toggleMenu()"
+                aria-label="Open menu">
+            ☰
+        </button>
 
-        <p>Window Measurement Calculator</p>
+        <div class="menu-dropdown" id="menuDropdown">
+
+            <a href="{% url 'calculation_history' %}">
+                📋 {{ ui.history }}
+            </a>
+
+            <a href="{% url 'language_selection' %}">
+                🌐 {{ ui.change_language }}
+            </a>
+
+        </div>
+
+        <h1>🪟 {{ ui.app_name }}</h1>
+        <p>{{ ui.subtitle }}</p>
 
     </div>
-
-
-
-    <!-- ================= WINDOW MEASUREMENT ================= -->
 
     <div class="measurement-card">
 
-        <h2>Window Measurement</h2>
-
+        <h2>{{ ui.measurement }}</h2>
 
         <form method="POST">
-
             {% csrf_token %}
-
 
             <div class="inputs">
 
-
                 <div class="input-box">
+                    <label>{{ ui.width }}</label>
 
-                    <label>
-                        Width
-                    </label>
-
-
-                    <input
-                        type="text"
-                        name="width"
-                        value="{{ width }}"
-                        placeholder="Enter Width"
-                        required
-                    >
-
+                    <input type="text"
+                           name="width"
+                           value="{{ width }}"
+                           placeholder="{{ ui.enter_width }}"
+                           required>
                 </div>
 
-
-
                 <div class="input-box">
+                    <label>{{ ui.height }}</label>
 
-                    <label>
-                        Height
-                    </label>
-
-
-                    <input
-                        type="text"
-                        name="height"
-                        value="{{ height }}"
-                        placeholder="Enter Height"
-                        required
-                    >
-
+                    <input type="text"
+                           name="height"
+                           value="{{ height }}"
+                           placeholder="{{ ui.enter_height }}"
+                           required>
                 </div>
-
 
             </div>
 
-
-            <button
-                class="calculate-btn"
-                type="submit">
-
-                Calculate
-
+            <button class="calculate-btn" type="submit">
+                {{ ui.calculate }}
             </button>
-
 
         </form>
 
+        {% if error %}
+            <div class="error">{{ error }}</div>
+        {% endif %}
+
     </div>
-
-
-
-    <!-- ================= RESULTS ================= -->
 
     {% if bearing_result %}
 
+        <h2 class="results-title">{{ ui.result }}</h2>
 
-    <h2 class="results-title">
-        Calculation Result
-    </h2>
+        <div class="results">
 
-
-
-    <div class="results">
-
-
-        <!-- BEARING PATTI -->
-
-        <div class="result-card">
-
-            <h3>
-                📏 Bearing Patti
-            </h3>
-
-
-            <div class="result-value">
-
-                {{ bearing_result }}
-
+            <div class="result-card">
+                <h3>📏 {{ ui.bearing }}</h3>
+                <div class="result-value">{{ bearing_result }}</div>
             </div>
 
-        </div>
-
-
-
-        <!-- HANDLE INTERLOCK -->
-
-        <div class="result-card">
-
-            <h3>
-                🔧 Handle Interlock
-            </h3>
-
-
-            <div class="result-value">
-
-                {{ handle_result }}
-
+            <div class="result-card">
+                <h3>🔧 {{ ui.handle }}</h3>
+                <div class="result-value">{{ handle_result }}</div>
             </div>
 
-        </div>
+            <div class="result-card">
+                <h3>🪟 {{ ui.glass }}</h3>
 
+                <div class="glass-result">
+                    <div>
+                        {{ ui.glass_bearing }}:
+                        <span>{{ glass_bearing_result }}</span>
+                    </div>
 
-
-        <!-- GLASS -->
-
-        <div class="result-card">
-
-            <h3>
-                🪟 Glass
-            </h3>
-
-
-            <div class="glass-result">
-
-
-                <div>
-
-                    Bearing Patti:
-
-                    <span>
-                        {{ glass_bearing_result }}
-                    </span>
-
+                    <div>
+                        {{ ui.glass_handle }}:
+                        <span>{{ glass_handle_result }}</span>
+                    </div>
                 </div>
-
-
-                <div>
-
-                    Handle Interlock:
-
-                    <span>
-                        {{ glass_handle_result }}
-                    </span>
-
-                </div>
-
-
             </div>
 
         </div>
 
-
-    </div>
-
-
-
-    <!-- ================= NEW CALCULATION ================= -->
-
-    <button
-        class="new-btn"
-        onclick="window.location.href=window.location.pathname">
-
-        + New Calculation
-
-    </button>
-
+        <a href="{% url 'calculator' %}" class="new-btn">
+            + {{ ui.new_calculation }}
+        </a>
 
     {% endif %}
 
-
 </div>
 
+<script>
+    function toggleMenu() {
+        document.getElementById("menuDropdown").classList.toggle("show");
+    }
+
+    document.addEventListener("click", function(event) {
+        const menu = document.getElementById("menuDropdown");
+        const button = document.querySelector(".menu-button");
+
+        if (!menu.contains(event.target) && !button.contains(event.target)) {
+            menu.classList.remove("show");
+        }
+    });
+</script>
 
 </body>
-
 </html>

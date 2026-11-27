@@ -1,0 +1,378 @@
+
+<!DOCTYPE html>
+<html lang="{{ ui.language }}">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>{{ ui.history }}</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #eef5f9;
+            color: #1f2937;
+        }
+
+        .app {
+            max-width: 1000px;
+            margin: auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #0f3d5e, #1976a8);
+            color: white;
+            padding: 25px;
+            border-radius: 18px;
+            text-align: center;
+            margin-bottom: 22px;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 27px;
+        }
+
+        .back-btn {
+            display: block;
+            text-decoration: none;
+            text-align: center;
+            background: #1976a8;
+            color: white;
+            padding: 14px;
+            border-radius: 10px;
+            font-weight: bold;
+            margin-bottom: 22px;
+        }
+
+        .back-btn:hover {
+            background: #0f5f8f;
+        }
+
+        /* Search Section */
+
+        .search-box {
+            background: white;
+            border: 1px solid #d7e7ef;
+            border-radius: 17px;
+            padding: 20px;
+            margin-bottom: 22px;
+            box-shadow: 0 5px 18px rgba(15, 61, 94, 0.10);
+        }
+
+        .search-box h3 {
+            margin-top: 0;
+            color: #0f3d5e;
+        }
+
+        .search-fields {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .search-field {
+            flex: 1;
+            min-width: 180px;
+        }
+
+        .search-field label {
+            display: block;
+            font-weight: bold;
+            color: #31566b;
+            margin-bottom: 8px;
+        }
+
+        .search-field input {
+            width: 100%;
+            padding: 13px;
+            border: 1px solid #b9d3df;
+            border-radius: 9px;
+            font-size: 16px;
+            outline: none;
+        }
+
+        .search-field input:focus {
+            border-color: #1976a8;
+        }
+
+        .search-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .search-btn,
+        .clear-btn {
+            flex: 1;
+            padding: 13px;
+            border-radius: 9px;
+            font-size: 15px;
+            font-weight: bold;
+            text-align: center;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .search-btn {
+            background: #1976a8;
+            color: white;
+            border: none;
+        }
+
+        .search-btn:hover {
+            background: #0f5f8f;
+        }
+
+        .clear-btn {
+            background: white;
+            color: #1976a8;
+            border: 1px solid #1976a8;
+        }
+
+        .clear-btn:hover {
+            background: #eef8fc;
+        }
+
+        .history-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 18px;
+        }
+
+        .history-card {
+            background: white;
+            border: 1px solid #d7e7ef;
+            border-radius: 17px;
+            padding: 20px;
+            box-shadow: 0 5px 18px rgba(15, 61, 94, 0.10);
+        }
+
+        .card-heading {
+            color: #0f3d5e;
+            font-size: 19px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #dceaf1;
+        }
+
+        .measurement {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .measure-box {
+            flex: 1;
+            background: #eef7fc;
+            padding: 12px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .measure-box small {
+            display: block;
+            color: #526d7c;
+            margin-bottom: 6px;
+        }
+
+        .measure-box strong {
+            font-size: 21px;
+            color: #0f5f8f;
+        }
+
+        .result-line {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            padding: 10px 0;
+            border-bottom: 1px solid #edf1f4;
+            font-size: 14px;
+        }
+
+        .result-line strong {
+            color: #0f5f8f;
+            text-align: right;
+        }
+
+        .date-time {
+            margin-top: 15px;
+            padding-top: 12px;
+            border-top: 1px solid #dceaf1;
+            color: #64748b;
+            font-size: 12px;
+            line-height: 1.8;
+        }
+
+        .empty {
+            background: white;
+            border-radius: 15px;
+            padding: 35px 20px;
+            text-align: center;
+            color: #64748b;
+            box-shadow: 0 5px 18px rgba(15, 61, 94, 0.08);
+        }
+
+        @media (max-width: 650px) {
+            .app {
+                padding: 12px;
+            }
+
+            .history-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .header h1 {
+                font-size: 23px;
+            }
+
+            .search-actions {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="app">
+
+    <div class="header">
+        <h1>📋 {{ ui.history }}</h1>
+    </div>
+
+    <a href="{% url 'calculator' %}" class="back-btn">
+        ← {{ ui.back }}
+    </a>
+
+
+<div class="search-box">
+
+    <form method="GET">
+
+        <div class="search-field">
+
+            <input type="text"
+                   name="q"
+                   value="{{ search_query }}"
+                   placeholder="🔍 Search Date, Bearing Patti, Handle Interlock..."
+                   style="width:100%; padding:15px; border:1px solid #b9d3df; border-radius:10px; font-size:16px;">
+
+        </div>
+
+        <div class="search-actions">
+
+            <button type="submit" class="search-btn">
+                🔍 Search
+            </button>
+
+            {% if search_query %}
+                <a href="{% url 'calculation_history' %}"
+                   class="clear-btn">
+                    ✖ Clear
+                </a>
+            {% endif %}
+
+        </div>
+
+    </form>
+
+</div>
+
+
+    <!-- History Cards -->
+
+    {% if history %}
+
+        <div class="history-grid">
+
+            {% for item in history %}
+
+                <div class="history-card">
+
+                    <div class="card-heading">
+                        🪟 {{ ui.measurement }} #{{ forloop.counter }}
+                    </div>
+
+                    <div class="measurement">
+
+                        <div class="measure-box">
+                            <small>{{ ui.width }}</small>
+                            <strong>{{ item.width }}</strong>
+                        </div>
+
+                        <div class="measure-box">
+                            <small>{{ ui.height }}</small>
+                            <strong>{{ item.height }}</strong>
+                        </div>
+
+                    </div>
+
+                    <div class="result-line">
+                        <span>📏 {{ ui.bearing }}</span>
+                        <strong>{{ item.bearing_patti }}</strong>
+                    </div>
+
+                    <div class="result-line">
+                        <span>🔧 {{ ui.handle }}</span>
+                        <strong>{{ item.handle_interlock }}</strong>
+                    </div>
+
+                    <div class="result-line">
+                        <span>🪟 {{ ui.glass_bearing }}</span>
+                        <strong>{{ item.glass_bearing_patti }}</strong>
+                    </div>
+
+                    <div class="result-line">
+                        <span>🪟 {{ ui.glass_handle }}</span>
+                        <strong>{{ item.glass_handle_interlock }}</strong>
+                    </div>
+
+                    <div class="date-time">
+                        📅 {{ ui.date }}:
+                        {{ item.created_at|date:"d-m-Y" }}
+
+                        <br>
+
+                        🕒 {{ ui.time }}:
+                        {{ item.created_at|date:"h:i A" }}
+                    </div>
+
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+    {% else %}
+
+        <div class="empty">
+            <h2>🔍</h2>
+
+            <p>
+                {% if search_query %}
+                    {% if ui.language == 'mr' %}
+                        शोधलेला Record सापडला नाही.
+                    {% else %}
+                        No matching records found.
+                    {% endif %}
+                {% else %}
+                    {{ ui.no_history }}
+                {% endif %}
+            </p>
+        </div>
+
+    {% endif %}
+
+</div>
+
+</body>
+</html>
